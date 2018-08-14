@@ -405,8 +405,8 @@ import {generateKeyPair} from '../lib/sep5'
         fetchTrustlines() {
         StellarSdk.Network.useTestNetwork();
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.server, {allowHttp: true});
-        console.log(prefix.server)
+        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+        console.log(prefix.horizon_server)
         var current = this
         server.loadAccount(prefix.account.public)
         .then(function(account) {
@@ -432,7 +432,7 @@ import {generateKeyPair} from '../lib/sep5'
       },
       fetchHistory(asset) {
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.server, {allowHttp: true});
+        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
         server.payments()
           .forAccount(prefix.account.public)
           .order('desc')

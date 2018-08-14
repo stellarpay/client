@@ -323,7 +323,7 @@ export default {
         fetchTrustlines() {
         StellarSdk.Network.useTestNetwork();
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.server, {allowHttp: true});
+        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
         var current = this
         prefix.account.status = ''
         server.loadAccount(prefix.account.public)
@@ -363,7 +363,7 @@ export default {
       },
       fetchHistory(asset) {
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.server, {allowHttp: true});
+        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
         var current = this
         server.payments()
           .forAccount(prefix.account.public)

@@ -19,8 +19,8 @@ new Vue({
   router,
   components:{App,NavbarComponent,FooterComponent},
   data: {
-  server : 'https://horizon-testnet.stellar.org/',
-  horizon_server : 'https://horizon-testnet.stellar.org/',
+  testnet_server : 'https://horizon-testnet.stellar.org/',
+  horizon_server : 'https://horizon.stellar.org/',
   api_server : 'https://api.stellarpay.io',
   prices : '',
   merchants: [],

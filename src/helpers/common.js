@@ -66,8 +66,9 @@ export default {
   methods:{
     createAsset(secret,code,issuer,limit,label,logo){
       StellarSdk.Network.useTestNetwork();
+      var prefix = this.$root
       var keypair = StellarSdk.Keypair.fromSecret(secret);
-      var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
+      var server = new StellarSdk.Server(prefix.horizon_server);
       var sourcePublicKey = keypair.publicKey();
       var asset = new StellarSdk.Asset(code, issuer);
     server.loadAccount(sourcePublicKey)
@@ -86,9 +87,9 @@ export default {
     },
     fetchTrustlines() {
     StellarSdk.Network.useTestNetwork();
-    var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
-    var vm = this;
     var prefix = this.$root
+    var server = new StellarSdk.Server(prefix.horizon_server);
+    var vm = this;
     server.loadAccount('GATSNAWVCTFFE7DAGFPYBXBZX3OWL7KL6NPWUPS2KSGOFY4CB7EKXDPQ')
     .then(function(account) {
       $.grep(account.balances, function (altered) {
@@ -103,8 +104,8 @@ export default {
     });
   },
   fetchHistory() {
-    var server = new StellarSdk.Server('https://horizon-testnet.stellar.org');
     var prefix = this.$root
+    var server = new StellarSdk.Server(prefix.horizon_server);
     server.payments()
       .forAccount(prefix.account.public)
       .order('desc')
