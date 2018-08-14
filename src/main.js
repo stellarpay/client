@@ -171,7 +171,7 @@ new Vue({
     },
   methods: {
     fetchTrustlines() {
-    StellarSdk.Network.useTestNetwork();
+    StellarSdk.Network.usePublicNetwork();
     var server = new StellarSdk.Server(this.server, {allowHttp: true});
     var vm = this;
     var prefix = this

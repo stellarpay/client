@@ -65,7 +65,7 @@ export default {
   },
   methods:{
     createAsset(secret,code,issuer,limit,label,logo){
-      StellarSdk.Network.useTestNetwork();
+      StellarSdk.Network.usePublicNetwork();
       var prefix = this.$root
       var keypair = StellarSdk.Keypair.fromSecret(secret);
       var server = new StellarSdk.Server(prefix.horizon_server);
@@ -86,7 +86,7 @@ export default {
       });
     },
     fetchTrustlines() {
-    StellarSdk.Network.useTestNetwork();
+    StellarSdk.Network.usePublicNetwork();
     var prefix = this.$root
     var server = new StellarSdk.Server(prefix.horizon_server);
     var vm = this;

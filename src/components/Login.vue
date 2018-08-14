@@ -403,7 +403,7 @@ import {generateKeyPair} from '../lib/sep5'
               const keyPair = generateKeyPair(bip39Seed, this.$root.derivationPathIndex)
           },
         fetchTrustlines() {
-        StellarSdk.Network.useTestNetwork();
+        StellarSdk.Network.usePublicNetwork();
         var prefix = this.$root
         var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
         console.log(prefix.horizon_server)

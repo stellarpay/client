@@ -282,7 +282,7 @@ export default {
   },
   methods:{
       createAsset(secret,code,issuer,limit,label,logo){
-        StellarSdk.Network.useTestNetwork();
+        StellarSdk.Network.usePublicNetwork();
         var keypair = StellarSdk.Keypair.fromSecret(secret);
         var prefix = this.$root
         var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
@@ -321,7 +321,7 @@ export default {
         });
       },
         fetchTrustlines() {
-        StellarSdk.Network.useTestNetwork();
+        StellarSdk.Network.usePublicNetwork();
         var prefix = this.$root
         var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
         var current = this

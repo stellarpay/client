@@ -177,7 +177,7 @@ export default {
         }, 2000);
         prefix.submitted = false
       }
-        StellarSdk.Network.useTestNetwork();
+        StellarSdk.Network.usePublicNetwork();
         if(asset == 'native'){
           var transferAsset = StellarSdk.Asset.native();
         } else {
@@ -236,7 +236,7 @@ export default {
         }, 2000);
         prefix.submitted = false
       }
-        StellarSdk.Network.useTestNetwork();
+        StellarSdk.Network.usePublicNetwork();
         server.loadAccount(sourcePublicKey)
           .then(function(account) {
             var transaction = new StellarSdk.TransactionBuilder(account)
