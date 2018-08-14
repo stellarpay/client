@@ -1,0 +1,37 @@
+{
+  "name": "stellarpay-app",
+  "description": "StellarPay",
+  "version": "1.0.0",
+  "author": "Mert Gonul <mert@datadef.com>",
+  "private": true,
+  "scripts": {
+    "dev": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
+  },
+  "dependencies": {
+    "axios": "^0.18.0",
+    "bip39": "^2.5.0",
+    "crypto-js": "^3.1.9-1",
+    "moment": "^2.22.2",
+    "segments": "^1.0.1",
+    "sjcl": "^1.0.7",
+    "stellar-sdk": "^0.9.1",
+    "style-loader": "^0.21.0",
+    "vue": "^2.4.4",
+    "vue-router": "^3.0.1",
+    "vue-set-state": "^0.1.1",
+    "vuex": "^3.0.1"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "cross-env": "^5.0.5",
+    "css-loader": "^0.28.11",
+    "file-loader": "^1.1.4",
+    "vue-loader": "^13.0.5",
+    "vue-template-compiler": "^2.4.4",
+    "webpack": "^3.6.0",
+    "webpack-dev-server": "^2.9.1"
+  }
+}
