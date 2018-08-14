@@ -10,3 +10,7 @@ npm run dev
 # build for production with minification
 npm run build
 ```
+
+## Credits
+
+Stellar deterministic wallet generator library : https://stellar-fox.github.io/redshift/
