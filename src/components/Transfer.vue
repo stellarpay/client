@@ -163,10 +163,21 @@ export default {
     }
   },
   methods: {
-    startTransfer(secret,transferDest,transferAmount,memo,asset){
+    startTransfer(){
       var prefix = this.$root
+      var secret = prefix.account.private
+      var transferDest = prefix.transfer.receiver
+      var transferAmount = prefix.transfer.amount
+      var memo = prefix.transfer.note
+      var asset = prefix.transfer.currency
       var keypair = StellarSdk.Keypair.fromSecret(secret);
-      var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+      if(prefix.testnet_active == false){
+        StellarSdk.Network.usePublicNetwork();
+        var server = new StellarSdk.Server(prefix.sdf_horizon_server, {allowHttp: true});
+      } else {
+        StellarSdk.Network.useTestNetwork();
+        var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+      }
       var sourcePublicKey = keypair.publicKey();
       var router = this.$router
       prefix.submitted = true
@@ -177,7 +188,6 @@ export default {
         }, 2000);
         prefix.submitted = false
       }
-        StellarSdk.Network.usePublicNetwork();
         if(asset == 'native'){
           var transferAsset = StellarSdk.Asset.native();
         } else {
@@ -222,10 +232,21 @@ export default {
             prefix.submitted = false
           });
     },
-    createAccountTransfer(secret,transferDest,transferAmount,memo,asset){
+    createAccountTransfer(){
       var prefix = this.$root
+      var secret = prefix.account.private
+      var transferDest = prefix.transfer.receiver
+      var transferAmount = prefix.transfer.amount
+      var memo = prefix.transfer.note
+      var asset = prefix.transfer.currency
       var keypair = StellarSdk.Keypair.fromSecret(secret);
-      var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+      if(prefix.testnet_active == false){
+        StellarSdk.Network.usePublicNetwork();
+        var server = new StellarSdk.Server(prefix.sdf_horizon_server, {allowHttp: true});
+      } else {
+        StellarSdk.Network.useTestNetwork();
+        var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+      }
       var sourcePublicKey = keypair.publicKey();
       var router = this.$router
       prefix.submitted = true
@@ -236,7 +257,6 @@ export default {
         }, 2000);
         prefix.submitted = false
       }
-        StellarSdk.Network.usePublicNetwork();
         server.loadAccount(sourcePublicKey)
           .then(function(account) {
             var transaction = new StellarSdk.TransactionBuilder(account)
@@ -289,7 +309,7 @@ export default {
         params.append('photo', 'test');
         params.append('address', address);
         params.append('signature', signature);
-            axios.post('https://api.stellarpay.io/api/create_contact', params).then(function (response){
+            axios.post(this.$root.api_server+'/api/create_contact', params).then(function (response){
               prefix.create_contact = []
               prefix.message = 'Contact successfuly added!'
             })
@@ -303,7 +323,13 @@ export default {
     },
     checkAccount(publicKey){
       var prefix = this.$root
-      var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+      if(prefix.testnet_active == false){
+        StellarSdk.Network.usePublicNetwork();
+        var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
+      } else {
+        StellarSdk.Network.useTestNetwork();
+        var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+      }
       var current = this
       server.loadAccount(publicKey)
         .catch(function(error) {
@@ -311,17 +337,17 @@ export default {
             prefix.transfer.destinationStatus = 'not_exist'
           }
           if(prefix.transfer.destinationStatus = 'not_exist'){
-            current.createAccountTransfer(prefix.account.private,prefix.transfer.receiver,prefix.transfer.amount,prefix.transfer.note,prefix.transfer.currency)
+            current.createAccountTransfer()
           }
         })
         .then(function(account) {
           if(prefix.transfer.destinationStatus != 'not_exist'){
-            current.startTransfer(prefix.account.private,prefix.transfer.receiver,prefix.transfer.amount,prefix.transfer.note,prefix.transfer.currency)
+            current.startTransfer()
           }
         });
     },
     fetchContacts(){
-      axios.get('https://api.stellarpay.io/api/'+'contacts/'+this.$root.account.signature).then(response => {
+      axios.get(this.$root.api_server+'/api/contacts/'+this.$root.account.signature).then(response => {
           this.$root.contacts = response.data.result
       })
     },

@@ -14,3 +14,7 @@ npm run build
 ## Credits
 
 Stellar deterministic wallet generator library : https://stellar-fox.github.io/redshift/
+
+# Test It!
+
+https://stellarpay.io/

@@ -159,7 +159,7 @@ export default{
           params.append('currencies', JSON.stringify(currencies));
           params.append('logo', logo);
           params.append('signature', prefix.account.signature);
-              axios.post('https://api.stellarpay.io/api/create_merchant', params).then(function (response){
+              axios.post(this.$root.api_server+'/api/create_merchant', params).then(function (response){
                 if(response.data.message){
                   prefix.error = response.data.error
                 } else{
@@ -173,12 +173,12 @@ export default{
               })
       },
       fetchMerchants(){
-        axios.get('https://api.stellarpay.io/api/'+'merchants/'+this.$root.account.signature).then(response => {
+        axios.get(this.$root.api_server+'/api/merchants/'+this.$root.account.signature).then(response => {
             this.$root.merchants = response.data.result
             })
       },
       fetchStats(){
-        axios.get('https://api.stellarpay.io/api/'+'stats/'+this.$root.account.id).then(response => {
+        axios.get(this.$root.api_server+'/api/stats/'+this.$root.account.id).then(response => {
             this.$root.stats = response.data
             })
       },

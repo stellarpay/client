@@ -43,7 +43,7 @@
                   </div>
                   <div class="input string optional">
                     <label class="string optional" for="user-pw-repeat">Repeat password *</label>
-                    <input class="string optional" maxlength="255" id="user-pw-repeat" placeholder="Repeat password" type="password" size="50" />
+                    <input class="string optional" maxlength="255" v-model="login.signup.password_repeat" placeholder="Repeat password" type="password" size="50" />
                   </div>
                 </div>
                 <div class="simform__actions">
@@ -100,7 +100,7 @@
                     <i class="fa fa-code"></i>
                   </div>
                   <div class="connect__context">
-                    <span>Have you visited StellarPay <strong>API documentation?</strong></span>
+                    <span><a href="https://stellarpay.io/documentation" target="_blank" style="text-decoration:none">Have you visited StellarPay <strong>API documentation?</strong></a></span>
                   </div>
                 </a>
               </div>
@@ -255,32 +255,40 @@ import {generateKeyPair} from '../lib/sep5'
         },
         methods: {
           fetchUuid(){
-            axios.get('https://api.stellarpay.io/api/generate_uuid').then(response => {
+            axios.get(this.$root.api_server+'/api/generate_uuid').then(response => {
                 this.$root.signup.id = response.data.uuid
                 })
           },
           fetchAccount(){
+            var prefix = this.$root
             this.$root.error = ''
-            axios.get('https://api.stellarpay.io/api/'+'account/'+this.$root.account.id).then(response => {
-                if(response.data.error){
-                  this.$root.error = response.data.error
-                } else {
-                  this.$root.account.data = response.data
-                  this.$root.account.payload = response.data.payload
-                  try {
-                    this.$root.account.private = this.decryptUserData(this.$root.account.payload,this.$root.account.id+':'+this.$root.account.password)
-                    var decryptedPayload = JSON.parse(this.$root.account.private)
-                    this.$root.account.private = decryptedPayload.secret
-                    this.$root.account.mnemonic = decryptedPayload.mnemonic
-                    this.loginAccount(decryptedPayload.secret)
-                  }
-                  catch(err) {
-                    if(err){
-                      this.$root.error = 'Wrong password!'
+            if(this.$root.account.id == ''){
+              prefix.error = 'UUID cannot be blank!'
+              setTimeout(function() {
+                  prefix.error = ''
+              }, 2500);
+            } else {
+              axios.get(this.$root.api_server+'/api/account/'+this.$root.account.id).then(response => {
+                  if(response.data.error){
+                    this.$root.error = response.data.error
+                  } else {
+                    this.$root.account.data = response.data
+                    this.$root.account.payload = response.data.payload
+                    try {
+                      this.$root.account.private = this.decryptUserData(this.$root.account.payload,this.$root.account.id+':'+this.$root.account.password)
+                      var decryptedPayload = JSON.parse(this.$root.account.private)
+                      this.$root.account.private = decryptedPayload.secret
+                      this.$root.account.mnemonic = decryptedPayload.mnemonic
+                      this.loginAccount(decryptedPayload.secret)
+                    }
+                    catch(err) {
+                      if(err){
+                        this.$root.error = 'Wrong password!'
+                      }
                     }
                   }
-                }
-                })
+                  })
+            }
           },
           loginAccount(secret){
             this.$root.account.from = StellarSdk.Keypair.fromSecret(secret)
@@ -293,7 +301,7 @@ import {generateKeyPair} from '../lib/sep5'
             var prefix = this
             var router = this.$router
             this.$root.submitted = true
-            axios.post('https://api.stellarpay.io/api/signin', params).then(function (response){
+            axios.post(this.$root.api_server+'/api/signin', params).then(function (response){
               if(response.data.error){
                 stateForAxios.error = response.data.error
               } else{
@@ -323,7 +331,7 @@ import {generateKeyPair} from '../lib/sep5'
             var stateForAxios = this.$root
             var router = this.$router
             this.$root.submitted = true
-            axios.post('https://api.stellarpay.io/api/signup', params).then(function (response){
+            axios.post(this.$root.api_server+'/api/signup', params).then(function (response){
               if(response.data.error){
                 stateForAxios.error = response.data.error
               } else{
@@ -403,10 +411,14 @@ import {generateKeyPair} from '../lib/sep5'
               const keyPair = generateKeyPair(bip39Seed, this.$root.derivationPathIndex)
           },
         fetchTrustlines() {
-        StellarSdk.Network.usePublicNetwork();
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
-        console.log(prefix.horizon_server)
+        if(prefix.testnet_active == false){
+          StellarSdk.Network.usePublicNetwork();
+          var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
+        } else {
+          StellarSdk.Network.useTestNetwork();
+          var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+        }
         var current = this
         server.loadAccount(prefix.account.public)
         .then(function(account) {
@@ -432,7 +444,13 @@ import {generateKeyPair} from '../lib/sep5'
       },
       fetchHistory(asset) {
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+        if(prefix.testnet_active == false){
+          StellarSdk.Network.usePublicNetwork();
+          var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
+        } else {
+          StellarSdk.Network.useTestNetwork();
+          var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+        }
         server.payments()
           .forAccount(prefix.account.public)
           .order('desc')

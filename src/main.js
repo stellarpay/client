@@ -19,8 +19,13 @@ new Vue({
   router,
   components:{App,NavbarComponent,FooterComponent},
   data: {
-  testnet_server : 'https://horizon-testnet.stellar.org/',
-  horizon_server : 'https://horizon.stellar.org/',
+  testnet_active : false,
+  // StellarPay Horizon Server - Increased Request Rate, Using for Fetching Requests
+  sp_horizon_server : 'https://horizon.stellarpay.io',
+  // Stellar Foundation Horizon Server - Using for Broadcasting Operations
+  sdf_horizon_server : 'https://horizon.stellar.org',
+  // Testnet Server for Sandbox Operations
+  testnet_horizon_server : 'https://horizon-testnet.stellar.org/',
   api_server : 'https://api.stellarpay.io',
   prices : '',
   merchants: [],
@@ -107,7 +112,7 @@ new Vue({
     domain : '',
     success : '',
     cancel : '',
-    currencies : []
+    currencies : {}
   },
   create_contact: {
     label : '',
@@ -124,10 +129,11 @@ new Vue({
   signup: {
     id : '',
     password : '',
+    password_repeat : '',
     data: '',
     email: '',
     public: '',
-    private: ''
+    private: '',
   },
   account: {
     id : '',
@@ -171,10 +177,15 @@ new Vue({
     },
   methods: {
     fetchTrustlines() {
-    StellarSdk.Network.usePublicNetwork();
-    var server = new StellarSdk.Server(this.server, {allowHttp: true});
-    var vm = this;
     var prefix = this
+    if(prefix.testnet_active == false){
+      StellarSdk.Network.usePublicNetwork();
+      var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
+    } else {
+      StellarSdk.Network.useTestNetwork();
+      var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+    }
+    var vm = this;
     server.loadAccount(prefix.account.public)
     .then(function(account) {
       $.grep(account.balances, function (altered) {
@@ -227,7 +238,7 @@ new Vue({
       this.default_box.status = false
     },
     fetchPrice(){
-      axios.get('https://api.stellarpay.io/api/prices').then(response => {
+      axios.get(this.$root.api_server+'/api/prices').then(response => {
           this.$root.prices = response.data
           })
     },

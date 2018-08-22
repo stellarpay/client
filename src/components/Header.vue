@@ -27,7 +27,7 @@
                               </li>
                               <li>
                                   <li>
-                                      <router-link to="/settings" class="top-user"><i class="fa fa-user-circle" style="font-size:35px"></i></router-link>
+                                      <router-link to="/backup" class="top-user"><i class="fa fa-user-circle" style="font-size:35px"></i></router-link>
                                   </li>
                           </ul>
                       </div>

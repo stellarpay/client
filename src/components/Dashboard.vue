@@ -167,12 +167,6 @@
           </span>
                       </div>
                   </div>
-                  <span>Label</span>
-                  <br>
-                  <div class="modal-input donthide">
-                      <input id="section-input" type="text" v-model="dashboard.create_asset.label">
-                  </div>
-                  <br>
                   <span>Asset Code</span>
                   <br>
                   <div class="modal-input donthide">
@@ -224,7 +218,7 @@ export default {
         window.setInterval(() => {
         var current = this
         current.fetchTrustlines()
-      }, 15000);
+      }, 8000);
     })
     }
     /* eslint-disable */
@@ -282,10 +276,15 @@ export default {
   },
   methods:{
       createAsset(secret,code,issuer,limit,label,logo){
-        StellarSdk.Network.usePublicNetwork();
-        var keypair = StellarSdk.Keypair.fromSecret(secret);
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+        if(prefix.testnet_active == false){
+          StellarSdk.Network.usePublicNetwork();
+          var server = new StellarSdk.Server(prefix.sdf_horizon_server, {allowHttp: true});
+        } else {
+          StellarSdk.Network.useTestNetwork();
+          var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+        }
+        var keypair = StellarSdk.Keypair.fromSecret(secret);
         var sourcePublicKey = keypair.publicKey();
         var met = this
         prefix.submitted = true
@@ -309,6 +308,10 @@ export default {
                     $('#newAssetModal').modal('hide');
                     prefix.submitted = false
                 }, 2500);
+              } else {
+                setTimeout(function() {
+                    prefix.submitted = false
+                }, 2500);
               }
             });
         })
@@ -321,9 +324,14 @@ export default {
         });
       },
         fetchTrustlines() {
-        StellarSdk.Network.usePublicNetwork();
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+        if(prefix.testnet_active == false){
+          StellarSdk.Network.usePublicNetwork();
+          var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
+        } else {
+          StellarSdk.Network.useTestNetwork();
+          var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+        }
         var current = this
         prefix.account.status = ''
         server.loadAccount(prefix.account.public)
@@ -363,7 +371,13 @@ export default {
       },
       fetchHistory(asset) {
         var prefix = this.$root
-        var server = new StellarSdk.Server(prefix.horizon_server, {allowHttp: true});
+        if(prefix.testnet_active == false){
+          StellarSdk.Network.usePublicNetwork();
+          var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
+        } else {
+          StellarSdk.Network.useTestNetwork();
+          var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
+        }
         var current = this
         server.payments()
           .forAccount(prefix.account.public)
@@ -381,8 +395,7 @@ export default {
               }
             });
             prefix.last_actions[asset] = filtered
-            var layer = prefix.last_actions[asset]
-            $.grep(layer, function(layerElement){
+            $.grep(prefix.last_actions['native'], function(layerElement){
                 if(layerElement.type == 'create_account'){
                   layerElement.tx_type = 'Create'
                   layerElement.amount = layerElement.starting_balance

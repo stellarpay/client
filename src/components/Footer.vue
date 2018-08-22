@@ -17,13 +17,13 @@
 
           <!--Grid column-->
           <div class="col-md-2 mb-3">
-              <h4 class="title font-bold"><a href="/merchants">Individuals</a></h4>
+              <h4 class="title font-bold"><a href="#">Individuals</a></h4>
           </div>
           <!--Grid column-->
 
           <!--Grid column-->
           <div class="col-md-2 mb-3">
-              <h4 class="title font-bold"><a href="/merchants">Merchants</a></h4>
+              <h4 class="title font-bold"><a href="#">Merchants</a></h4>
           </div>
           <!--Grid column-->
 
@@ -35,7 +35,7 @@
 
           <!--Grid column-->
           <div class="col-md-2 mb-3">
-              <h4 class="title font-bold">Support</h4>
+              <h4 class="title font-bold"><a href="mailto:support@stellarpay.io">Support</a></h4>
           </div>
           <!--Grid column-->
           <br><br>

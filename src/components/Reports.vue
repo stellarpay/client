@@ -50,7 +50,7 @@ export default {
   },
   methods : {
     fetchReports(){
-      axios.get('https://api.stellarpay.io/api/'+'reports/'+this.$root.account.id).then(response => {
+      axios.get(this.$root.api_server+'/api/reports/'+this.$root.account.id).then(response => {
           this.$root.reports.list = response.data.result
           this.$root.reports.sum = response.data.sum.amount
           })
