@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="logmod">
-      <center><br><br><img src="https://api.stellarpay.io/assets/logo.png" width="210px" style="margin-top:60px"><br><p style="font-size:35px;color:white">Selam ben mert</p></center>
+      <center><br><br><img src="https://api.stellarpay.io/assets/logo.png" width="210px" style="margin-top:60px"><br><p style="font-size:35px;color:white">Payment gateway and management for Stellar network</p></center>
       <div class="logmod__wrapper">
         <div v-if="login.message" class="alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -13,43 +13,27 @@
         </div>
         <div class="logmod__container">
           <ul class="logmod__tabs">
-            <li data-tabtar="lgm-2"><a href="#">Login</a></li>
-            <li data-tabtar="lgm-1"><a href="#">Sign Up</a></li>
+            <li data-tabtar="lgm-2"><a href="#" style="margin-left: 140px">Restore</a></li>
           </ul>
           <div class="logmod__tab-wrapper">
-          <div class="logmod__tab lgm-1">
-            <div class="logmod__heading">
-              <span class="logmod__heading-subtitle">*Your password and wallet key are never stored in <strong>database.</strong></span>
-            </div>
+          <div class="logmod__tab lgm-2">
             <div class="logmod__form">
               <form accept-charset="utf-8" action="#" class="simform">
                 <div class="sminputs">
                   <div class="input full">
-                    <label class="string optional" for="user-name">Account ID</label>
-                    <input class="string optional" maxlength="255" v-model="login.signup.id" type="text" size="50" disabled/>
-                    <span class="gen-uuid" @click="fetchUuid()">Generate New</span>
+                    <label class="string optional" for="user-email">12 words mnemonic</label>
+                    <input class="string optional" maxlength="255" v-model="mnemonic" type="email" placeholder="Mnemonic" />
                   </div>
                 </div>
-                <div class="sminputs">
+                <div class="sminputs" v-if="secret_key_converted">
                   <div class="input full">
-                    <label class="string optional" for="user-email">Email * (for Notifications and backup)</label>
-                    <input class="string optional" maxlength="255" v-model="login.signup.email" type="email" placeholder="Email" size="50" />
-                  </div>
-                </div>
-                <div class="sminputs">
-                  <div class="input string optional">
-                    <label class="string optional" for="user-pw">Password *</label>
-                    <input class="string optional" maxlength="255" v-model="login.signup.password" placeholder="Password" type="password" size="50" />
-                  </div>
-                  <div class="input string optional">
-                    <label class="string optional" for="user-pw-repeat">Repeat password *</label>
-                    <input class="string optional" maxlength="255" v-model="login.signup.password_repeat" placeholder="Repeat password" type="password" size="50" />
+                    <label class="string optional" for="user-email">Secret key</label>
+                    <input class="string optional" maxlength="255" v-model="secret_key" type="email"/>
                   </div>
                 </div>
                 <div class="simform__actions">
-                  <button class="submit" type="button" @click="sendSignup()" v-show="login.submitted == false"><b>Signup</b></button>
-                  <button class="submit" type="button" :disabled="login.submitted" v-show="login.submitted"><b>Registering..</b></button>
-                  <span class="simform__actions-sidetext">By creating an account you agree to our <a class="special" href="#" target="_blank" role="link">Terms & Privacy</a></span>
+                  <button class="submit" type="button" @click="restoreMnemonic(mnemonic)" v-show="login.submitted == false"><b>Restore</b></button>
+                  <span class="simform__actions-sidetext">By restroing an account you agree to our <a class="special" href="#" target="_blank" role="link">Terms & Privacy</a></span>
                 </div>
               </form>
             </div>
@@ -67,45 +51,6 @@
               </div>
             </div>
           </div>
-          <div class="logmod__tab lgm-2">
-            <div class="logmod__heading">
-              <span class="logmod__heading-subtitle">Enter your ID and password <strong>to sign in</strong></span>
-            </div>
-            <div class="logmod__form">
-              <form accept-charset="utf-8" action="#" class="simform">
-                <div class="sminputs">
-                  <div class="input full">
-                    <label class="string optional" for="user-name">Account ID</label>
-                    <input class="string optional" maxlength="255" v-model="login.account.id" placeholder="UUID" type="text" size="50" />
-                  </div>
-                </div>
-                <div class="sminputs">
-                  <div class="input full">
-                    <label class="string optional" for="user-pw">Password</label>
-                    <input class="string optional" maxlength="255" v-model="login.account.password" placeholder="Password" type="password" size="50" />
-                    						<span class="hide-password">Show</span>
-                  </div>
-                </div>
-                <div class="simform__actions">
-                    <button class="submit" type="button" @click="fetchAccount()" v-show="login.submitted == false"><b>Login</b></button>
-                    <button class="submit" type="button" :disabled="login.submitted" v-show="login.submitted"><b>Logging..</b></button>
-                    <span class="simform__actions-sidetext"><router-link to="restore" class="special" role="link" href="#" style="text-decoration:none;line-height:45px">Restore Wallet</router-link></span>
-                </div>
-              </form>
-            </div>
-            <div class="logmod__alter">
-              <div class="logmod__alter-container">
-                <a href="#" class="connect try">
-                  <div class="connect__icon">
-                    <i class="fa fa-code"></i>
-                  </div>
-                  <div class="connect__context">
-                    <span><a href="https://stellarpay.io/documentation" target="_blank" style="text-decoration:none">Have you visited StellarPay <strong>API documentation?</strong></a></span>
-                  </div>
-                </a>
-              </div>
-            </div>
-              </div>
           </div>
         </div>
       </div>
@@ -135,15 +80,14 @@ import {generateKeyPair} from '../lib/sep5'
             return {
                 input: {
                     username: "",
-                    password: ""
-                }
+                    password: "",
+                },
+                secret_key: '',
+                secret_key_converted: false,
+                mnemonic: ''
             }
         },
         mounted(){
-          this.generateMnemonic();
-          this.fetchUuid();
-          this.restoreMnemonic('liberty hybrid settle mandate south analyst pride vehicle armor robot just swing');
-
           var LoginModalController = {
           tabsElementName: ".logmod__tabs li",
           tabElementName: ".logmod__tab",
@@ -254,103 +198,6 @@ import {generateKeyPair} from '../lib/sep5'
 
         },
         methods: {
-          fetchUuid(){
-            axios.get(this.$root.api_server+'/api/generate_uuid').then(response => {
-                this.$root.signup.id = response.data.uuid
-                })
-          },
-          fetchAccount(){
-            var prefix = this.$root
-            this.$root.error = ''
-            if(this.$root.account.id == ''){
-              prefix.error = 'UUID cannot be blank!'
-              setTimeout(function() {
-                  prefix.error = ''
-              }, 2500);
-            } else {
-              axios.get(this.$root.api_server+'/api/account/'+this.$root.account.id).then(response => {
-                  if(response.data.error){
-                    this.$root.error = response.data.error
-                  } else {
-                    this.$root.account.data = response.data
-                    this.$root.account.payload = response.data.payload
-                    try {
-                      this.$root.account.private = this.decryptUserData(this.$root.account.payload,this.$root.account.id+':'+this.$root.account.password)
-                      var decryptedPayload = JSON.parse(this.$root.account.private)
-                      this.$root.account.private = decryptedPayload.secret
-                      this.$root.account.mnemonic = decryptedPayload.mnemonic
-                      this.loginAccount(decryptedPayload.secret)
-                    }
-                    catch(err) {
-                      if(err){
-                        this.$root.error = 'Wrong password!'
-                      }
-                    }
-                  }
-                  })
-            }
-          },
-          loginAccount(secret){
-            this.$root.account.from = StellarSdk.Keypair.fromSecret(secret)
-            this.$root.account.public = this.$root.account.from.publicKey()
-            this.$root.account.signature = this.$root.account.from.sign('LoginForStellarPay').toString("hex")
-            var params = new URLSearchParams();
-            params.append('id', this.$root.account.id);
-            params.append('signature', this.$root.account.signature);
-            var stateForAxios = this.$root
-            var prefix = this
-            var router = this.$router
-            this.$root.submitted = true
-            axios.post(this.$root.api_server+'/api/signin', params).then(function (response){
-              if(response.data.error){
-                stateForAxios.error = response.data.error
-              } else{
-                stateForAxios.account.logged = true
-                stateForAxios.message = ''
-                stateForAxios.error = ''
-                stateForAxios.submitted = false
-                stateForAxios.active_currency.code = 'native'
-                router.push('dashboard')
-              }
-            })
-          },
-          chain()
-          {
-              return this.$root;
-          },
-          sendSignup(){
-            var data = JSON.stringify({secret:this.$root.syncWithServer.private,mnemonic:this.$root.syncWithServer.mnemonic})
-            this.$root.syncWithServer.data = this.encryptUserData(data,this.$root.signup.id+':'+this.$root.signup.password)
-            this.$root.syncWithServer.signature = this.$root.syncWithServer.random.sign('LoginForStellarPay').toString("hex")
-            this.$root.syncWithServer.content = JSON.stringify({pbkdf2_iterations:"10000",payload:this.$root.syncWithServer.data})
-            var params = new URLSearchParams();
-            params.append('id', this.$root.signup.id);
-            params.append('email', this.$root.signup.email);
-            params.append('payload', this.$root.syncWithServer.content);
-            params.append('signature', this.$root.syncWithServer.signature);
-            var stateForAxios = this.$root
-            var router = this.$router
-            this.$root.submitted = true
-            axios.post(this.$root.api_server+'/api/signup', params).then(function (response){
-              if(response.data.error){
-                stateForAxios.error = response.data.error
-              } else{
-                stateForAxios.message = 'Successfuly Created!'
-                stateForAxios.account.id = stateForAxios.signup.id
-                stateForAxios.account.password = stateForAxios.signup.password
-                stateForAxios.account.payload = stateForAxios.syncWithServer.data
-                stateForAxios.account.public = stateForAxios.syncWithServer.public
-                stateForAxios.account.private = stateForAxios.syncWithServer.private
-                stateForAxios.account.mnemonic = stateForAxios.syncWithServer.mnemonic
-                stateForAxios.account.signature = stateForAxios.syncWithServer.signature
-                stateForAxios.account.logged = true
-                stateForAxios.submitted = false
-                stateForAxios.message = ''
-                stateForAxios.error = ''
-                router.push('backup')
-              }
-            })
-          },
           encryptUserData(msg, pass) {
             var salt = CryptoJS.lib.WordArray.random(128/8);
 
@@ -407,78 +254,13 @@ import {generateKeyPair} from '../lib/sep5'
             this.setState({
               mnemonic,
               bip39Seed
-            })
-              const keyPair = generateKeyPair(bip39Seed, this.$root.derivationPathIndex)
-          },
-        fetchTrustlines() {
-        var prefix = this.$root
-        if(prefix.testnet_active == false){
-          StellarSdk.Network.usePublicNetwork();
-          var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
-        } else {
-          StellarSdk.Network.useTestNetwork();
-          var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
-        }
-        var current = this
-        server.loadAccount(prefix.account.public)
-        .then(function(account) {
-          $.grep(account.balances, function (altered) {
-            if(altered.asset_type == 'native'){
-              altered.asset_code = 'native'
-              altered.code = 'XLM'
-              prefix.balances[altered.asset_type] = altered.balance
-              prefix.account.native = altered.balance
-              prefix.assets = account.balances
-              current.fetchHistory('native')
-            } else {
-              prefix.active_currency.issuer = altered.asset_issuer
-              altered.code = altered.asset_code
-              altered.issuer = altered.asset_issuer
-              prefix.transfer.assets[altered.asset_code] = altered
-              prefix.balances[altered.asset_code] = altered.balance
-              prefix.assets = account.balances
-              current.fetchHistory(altered.asset_code)
-            }
-          });
-        });
-      },
-      fetchHistory(asset) {
-        var prefix = this.$root
-        if(prefix.testnet_active == false){
-          StellarSdk.Network.usePublicNetwork();
-          var server = new StellarSdk.Server(prefix.sp_horizon_server, {allowHttp: true});
-        } else {
-          StellarSdk.Network.useTestNetwork();
-          var server = new StellarSdk.Server(prefix.testnet_horizon_server, {allowHttp: true});
-        }
-        server.payments()
-          .forAccount(prefix.account.public)
-          .order('desc')
-          .limit(200)
-          .call()
-          .then(function (operationResult) {
-            prefix.last_actions[asset] = operationResult.records
-            var filtered = operationResult.records.filter(function (el) {
-              if(asset == 'native'){
-                  el.asset_code = 'XLM'
-                 return el.asset_type == asset;
-              } else {
-                return el.asset_code == asset;
-              }
             });
-            prefix.last_actions[asset] = filtered
-            var layer = prefix.last_actions[asset]
-            $.grep(layer, function(layerElement){
-                if(layerElement.type == 'create_account'){
-                  layerElement.tx_type = 'Create'
-                  layerElement.amount = layerElement.starting_balance
-                } else {
-                  layerElement.tx_type = 'Payment'
-                }
-            })
-            prefix.$forceUpdate();
-          });
-      },
+
+            const keyPair = generateKeyPair(bip39Seed, this.$root.derivationPathIndex)
+
+            this.secret_key_converted = true;
+            this.secret_key = keyPair.secret();
+          }
         }
     }
 </script>
@@ -1076,6 +858,26 @@ html {
   color: #16306e;
   position: relative;
   text-decoration: none;
+  transition: all 0.15s ease-out;
+}
+.special:before {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 1px;
+  bottom: 0px;
+  left: 0;
+  background: #f00;
+  visibility: hidden;
+  transform: scaleX(0);
+  transition: all 0.3s ease-in-out 0s;
+}
+.special:hover {
+  transition: all 0.15s ease-out;
+}
+.special:hover:before {
+  visibility: visible;
+  transform: scaleX(1);
 }
 
 #baseline {

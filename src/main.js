@@ -19,7 +19,7 @@ new Vue({
   router,
   components:{App,NavbarComponent,FooterComponent},
   data: {
-  testnet_active : false,
+  testnet_active : true,
   // StellarPay Horizon Server - Increased Request Rate, Using for Fetching Requests
   sp_horizon_server : 'https://horizon.stellarpay.io',
   // Stellar Foundation Horizon Server - Using for Broadcasting Operations
@@ -112,7 +112,8 @@ new Vue({
     domain : '',
     success : '',
     cancel : '',
-    currencies : {}
+    currencies : {},
+    is_shopify: 'true'
   },
   create_contact: {
     label : '',

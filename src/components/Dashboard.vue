@@ -12,10 +12,10 @@
                               <div class="middle">
                                   <div class="left">
                                       <a aria-current="false" href="#" id="link" rel="nofollow">
-                                          <img src="https://api.stellarpay.io/assets/images/assets/xlm.svg" class="icon">
+                                          <img src="https://api.stellarpay.io/assets/icons/xlm.svg" class="icon">
                                       </a>
                                       <div class="asset">
-                                          <div class="name">Stellar Lumens</div>
+                                          <div class="name">Stellar</div>
                                       </div>
                                   </div>
                                   <div class="right">

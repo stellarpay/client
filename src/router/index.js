@@ -8,6 +8,7 @@ import CreateAPI from '../components/CreateAPI.vue'
 import Reports from '../components/Reports.vue'
 import Backup from '../components/Backup.vue'
 import Settings from '../components/Settings.vue'
+import Restore from '../components/Restore.vue'
 
 Vue.use(Router)
 
@@ -52,6 +53,11 @@ export default new Router({
       path: '/settings',
       name: 'Settings',
       component: Settings
+    },
+    {
+      path: '/restore',
+      name: 'Restore',
+      component: Restore
     },
   ]
 })

@@ -82,7 +82,7 @@
                     <center>
                         <div class="generated_icon" v-show="merchants.active_api.apiImage == 'undefined' || merchants.active_api.apiImage == ''" style="width:100px;height:100px">
                         </div>
-                        <img :src="merchants.active_api.apiImage" style="height:100px;weight:100px" v-show="merchants.active_api.apiImage != 'undefined'">
+                        <img :src="merchants.active_api.apiImage" v-show="merchants.active_api.apiImage != 'undefined'">
                     </center>
                     <span>API Key</span>
                     <br>
@@ -115,9 +115,9 @@
                     </div>
                     <hr>
                     <center>
-                        <button class="button large primary inline" data-clipboard-text="http://laaaocalhost/?ref=1">CHECK API DOCUMENTATION</button>
-                        <a target='_blank' :href="'https://stellarpay.io/checkout/?amount=5&description=test&merchant=' + merchants.active_api.apiId">
-                            <button class="button large primary inline" style="margin-left:10px;background:#777;border-color:#aaa"><i class="fa fa-external-link" aria-hidden="true"></i>&nbsp&nbspTEST ORDER</button>
+                        <a class="button large primary inline" target="_blank" href="https://stellarpay.io/documentation">CHECK API DOCUMENTATION</a>
+                        <a target='_blank' :href="'https://checkout.stellarpay.io/?amount=5&description=test&merchant=' + merchants.active_api.apiId">
+                            <button class="button large primary inline" style="margin-left:10px;background:#777;border-color:#aaa" v-if="merchants.active_api.isShopify != 'true'"><i class="fa fa-external-link" aria-hidden="true"></i>&nbsp&nbspTEST ORDER</button>
                         </a>
                     </center>
                 </div>
