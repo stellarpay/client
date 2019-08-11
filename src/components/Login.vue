@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="logmod">
-      <center><br><br><img src="https://api.stellarpay.io/assets/logo.png" width="210px" style="margin-top:60px"><br><p style="font-size:35px;color:white">Selam ben mert</p></center>
+      <center><br><br><img src="https://api.stellarpay.io/assets/logo.png" width="210px" style="margin-top:60px"><br><p style="font-size:35px;color:white">Payment gateway and management for Stellar network</p></center>
       <div class="logmod__wrapper">
         <div v-if="login.message" class="alert alert-success alert-dismissable">
         <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
@@ -329,27 +329,34 @@ import {generateKeyPair} from '../lib/sep5'
             params.append('payload', this.$root.syncWithServer.content);
             params.append('signature', this.$root.syncWithServer.signature);
             var stateForAxios = this.$root
-            var router = this.$router
-            this.$root.submitted = true
-            axios.post(this.$root.api_server+'/api/signup', params).then(function (response){
-              if(response.data.error){
-                stateForAxios.error = response.data.error
-              } else{
-                stateForAxios.message = 'Successfuly Created!'
-                stateForAxios.account.id = stateForAxios.signup.id
-                stateForAxios.account.password = stateForAxios.signup.password
-                stateForAxios.account.payload = stateForAxios.syncWithServer.data
-                stateForAxios.account.public = stateForAxios.syncWithServer.public
-                stateForAxios.account.private = stateForAxios.syncWithServer.private
-                stateForAxios.account.mnemonic = stateForAxios.syncWithServer.mnemonic
-                stateForAxios.account.signature = stateForAxios.syncWithServer.signature
-                stateForAxios.account.logged = true
-                stateForAxios.submitted = false
-                stateForAxios.message = ''
-                stateForAxios.error = ''
-                router.push('backup')
-              }
-            })
+            if(stateForAxios.signup.password == stateForAxios.signup.password_repeat){
+              var router = this.$router
+              this.$root.submitted = true
+              axios.post(this.$root.api_server+'/api/signup', params).then(function (response){
+                if(response.data.error){
+                  stateForAxios.error = response.data.error
+                } else{
+                  stateForAxios.message = 'Successfuly Created!'
+                  stateForAxios.account.id = stateForAxios.signup.id
+                  stateForAxios.account.password = stateForAxios.signup.password
+                  stateForAxios.account.payload = stateForAxios.syncWithServer.data
+                  stateForAxios.account.public = stateForAxios.syncWithServer.public
+                  stateForAxios.account.private = stateForAxios.syncWithServer.private
+                  stateForAxios.account.mnemonic = stateForAxios.syncWithServer.mnemonic
+                  stateForAxios.account.signature = stateForAxios.syncWithServer.signature
+                  stateForAxios.account.logged = true
+                  stateForAxios.submitted = false
+                  stateForAxios.message = ''
+                  stateForAxios.error = ''
+                  router.push('backup')
+                }
+              })
+            } else {
+              stateForAxios.error = 'Passwords are not matching!'
+              setTimeout(function() {
+                  stateForAxios.error = ''
+              }, 2500);
+            }
           },
           encryptUserData(msg, pass) {
             var salt = CryptoJS.lib.WordArray.random(128/8);

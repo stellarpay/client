@@ -134,7 +134,7 @@ export default{
   mounted(){
     this.fetchMerchants()
     this.fillAssets()
-    this.$root.api.approved_currencies = {native : ''}
+    this.$root.api.approved_currencies = {native : 1}
     if(this.$root.account.logged == false){
       this.$router.push('login')
     }

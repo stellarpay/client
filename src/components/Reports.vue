@@ -5,7 +5,7 @@
           <div class="box">
               <div class="center-box-w">
                   <div class="center-box-w-l">
-                      <div class="center-box-w-l-d">Total Amount of Sales<span class="center-box-w-l-d-a">${{ (reports.reports.sum * reports.prices.USD_XLM).toFixed(2) }}</span>
+                      <div class="center-box-w-l-d">Total Amount of Sales<span class="center-box-w-l-d-a">${{ (reports.reports.sum * 1).toFixed(2) }}</span>
                       </div>
                   </div>
                   <div class="content-header">
@@ -19,8 +19,11 @@
                                   <div class="generated_icon" style="background:transparent"><img :src="item.merchantLogo" style="border-style: none; width: 150%;margin-left:10px"></div>
                               </td>
                               <td>
-                                  <span>Payment received for {{ item.merchantLabel }}</span>
-                                  <span class="label label-success"> Confirmed </span>
+                                  <span v-if="item.shopifyId > 0">Payment received for {{ item.orderDescription }}</span>
+                                  <span v-else>Payment received for {{ item.merchantLabel }}</span>
+                                  <span v-if="item.shopifyId > 0" class="label label-success"><b>${{ item.orderCurrency.rate.toFixed(2) }}</b> per XLM</span>
+                                  <span v-else class="label label-success"> Confirmed</span>
+                                  <span class="label label-warning"><a :href="'https://stellarchain.io/tx/' + item.transactionId" target="_blank" style="text-decoration:none;color:white">View on-chain</a></span>
                               </td>
                               <td align="right">
                                   <span class="text-success" style="font-weight: initial;" v-if="item.orderCurrency.currency == 'native'">+ {{ item.orderAmount }} XLM</span>

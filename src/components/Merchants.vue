@@ -1,5 +1,15 @@
 <template>
   <div>
+    <div v-if="merchants.error" class="alert alert-danger alert-dismissable">
+    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    {{ merchants.error }}
+    </br>
+    </div>
+    <div v-if="merchants.message" class="alert alert-success alert-dismissable">
+  <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+    {{ merchants.message }}
+    </br>
+  </div>
     <div class="content-title">API List</div>
     <div id="navbarDropdown" class="left-box">
         <div class="left-box-w">
@@ -14,7 +24,7 @@
                                             {{ merchants.shortAsset(data.apiLabel)}}
                                         </div>
                                         <div class="generated_icon" v-show="data.apiImage != 'undefined'" style="background:transparent">
-                                            <img :src="data.apiImage" style="border-style: none; width: 40px; height: 40px;">
+                                            <img :src="data.apiImage" style="border-style: none; height: 100%;">
                                         </div>
                                     </a>
                                     <div class="asset">
@@ -45,12 +55,12 @@
                         <i class="fa fa-external-link-square" style="font-size:35px"></i>
                         <h1 style="font-size:55px">{{ merchants.stats.orderCount }}</h1>
                         <h3>Orders</h3>
-                        <h5>created by customers</h5>
+                        <h5>created</h5>
                         <hr>
                         <h3 style="font-size:35px">&</h3>
                         <h1 style="font-size:55px;margin-top:25px">{{ merchants.stats.salesCount }}</h1>
                         <h3>payments successfully</h3>
-                        <h5>completed since 2018/08</h5>
+                        <h5>completed</h5>
                     </center>
                 </div>
             </div>
@@ -82,7 +92,7 @@
                     <center>
                         <div class="generated_icon" v-show="merchants.active_api.apiImage == 'undefined' || merchants.active_api.apiImage == ''" style="width:100px;height:100px">
                         </div>
-                        <img :src="merchants.active_api.apiImage" v-show="merchants.active_api.apiImage != 'undefined'">
+                        <img :src="merchants.active_api.apiImage" v-show="merchants.active_api.apiImage != 'undefined'" style="width:150px">
                     </center>
                     <span>API Key</span>
                     <br>
@@ -96,28 +106,60 @@
                         <input class="css-et39ve e1opuodt6" disabled="disabled" id="section-input" type="text" :value="merchants.active_api.apiSecret">
                     </div>
                     <br>
+                    <span>Label</span>
+                    <br>
+                    <div class="modal-input donthide">
+                        <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.apiLabel">
+                    </div>
+                    </br>
+                    <span>Logo URL</span>
+                    <br>
+                    <div class="modal-input donthide">
+                        <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.apiImage">
+                    </div>
+                    </br>
                     <span>Notification URL</span>
                     <br>
-                    <div class="modal-input hideit">
-                        <input class="css-et39ve e1opuodt6" disabled="disabled" id="section-input" type="text" :value="merchants.active_api.apiIpn">
+                    <div class="modal-input donthide">
+                        <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.apiIpn">
                     </div>
                     <br>
                     <span>Success URL</span>
                     <br>
-                    <div class="modal-input hideit">
-                        <input class="css-et39ve e1opuodt6" disabled="disabled" id="section-input" type="text" :value="merchants.active_api.successUrl">
+                    <div class="modal-input donthide">
+                        <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.successUrl">
                     </div>
                     <br>
                     <span>Cancel URL</span>
                     <br>
-                    <div class="modal-input hideit">
-                        <input class="css-et39ve e1opuodt6" disabled="disabled" id="section-input" type="text" :value="merchants.active_api.cancelUrl">
+                    <div class="modal-input donthide">
+                        <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.cancelUrl">
                     </div>
+                    <ul class="list-group" v-for="(rate, asset_name) in merchants.active_api.acceptedCurrencies" v-if="asset_name != 'native'">
+                    </br>
+                      <span>Asset ratios</span>
+                    <br><br>
+                      <li class="list-group-item" style="padding:0px;border:0px;">
+                        <div class="left">
+                        <div class="generated_icon">{{ merchants.shortAsset(asset_name)}}</div>
+                        <span style="margin-left:10px;font-weight:600"> {{ asset_name }}</span>
+                      </div>
+                        <div class="right">
+                          <span class="status" style="margin-top:-50px">
+                          per XLM<input id="search" type="text" class="form-control input-lg" v-model="merchants.active_api.acceptedCurrencies[asset_name]" placeholder="Asset/XLM Rate" style="width:100px;height:35px"/></span>
+                          </div>
+                      </li>
+                      <hr>
+                    </ul>
                     <hr>
                     <center>
-                        <a class="button large primary inline" target="_blank" href="https://stellarpay.io/documentation">CHECK API DOCUMENTATION</a>
+                        <a class="button large primary inline" style="text-decoration:none" target="_blank" href="https://stellarpay.io/documentation">API DOCUMENTATION</a>
+                        <a class="button large primary inline" style="text-decoration:none;background:orange;border:1px solid orange" @click="updateMerchant()">UPDATE MERCHANT</a>
                         <a target='_blank' :href="'https://checkout.stellarpay.io/?amount=5&description=test&merchant=' + merchants.active_api.apiId">
-                            <button class="button large primary inline" style="margin-left:10px;background:#777;border-color:#aaa" v-if="merchants.active_api.isShopify != 'true'"><i class="fa fa-external-link" aria-hidden="true"></i>&nbsp&nbspTEST ORDER</button>
+                          <div v-if="merchants.active_api.isShopify != 'true'">
+                            </br></br>
+                            <button class="button large primary inline" style="margin-left:10px;background:#777;border-color:#aaa"><i class="fa fa-external-link" aria-hidden="true"></i>&nbsp&nbspTEST ORDER</button>
+                          </div>
                         </a>
                     </center>
                 </div>
@@ -147,27 +189,30 @@ export default{
     this.fetchStats()
     },
     methods:{
-      createMerchant(label,ipn,currencies,logo){
+      updateMerchant(){
         this.$root.error = ''
         this.$root.api_message = ''
         var prefix = this.$root
         var current = this
         var params = new URLSearchParams();
-          params.append('user_id', prefix.account.id);
-          params.append('label', label);
-          params.append('ipn', ipn);
-          params.append('currencies', JSON.stringify(currencies));
-          params.append('logo', logo);
+        console.log(prefix.active_api)
+          params.append('label', prefix.active_api.apiLabel);
+          params.append('ipn', prefix.active_api.apiIpn);
+          params.append('currencies', JSON.stringify(prefix.active_api.acceptedCurrencies));
+          params.append('logo', prefix.active_api.apiImage);
+          params.append('success', prefix.active_api.successUrl);
+          params.append('cancel', prefix.active_api.cancelUrl);
           params.append('signature', prefix.account.signature);
-              axios.post(this.$root.api_server+'/api/create_merchant', params).then(function (response){
+          params.append('api_id', prefix.active_api.apiId);
+              axios.post(this.$root.api_server+'/api/update_merchant', params).then(function (response){
                 if(response.data.message){
                   prefix.error = response.data.error
                 } else{
-                  prefix.message = 'Merchant API Successfuly Created!'
+                  $('#apiModal').modal('toggle');
                   current.fetchMerchants()
+                  prefix.message = 'Merchant API Successfuly Updated!'
                   setTimeout(function() {
                       prefix.message = ''
-                      prefix.api = []
                   }, 2500);
                 }
               })

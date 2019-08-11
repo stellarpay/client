@@ -19,9 +19,9 @@ new Vue({
   router,
   components:{App,NavbarComponent,FooterComponent},
   data: {
-  testnet_active : true,
+  testnet_active : false,
   // StellarPay Horizon Server - Increased Request Rate, Using for Fetching Requests
-  sp_horizon_server : 'https://horizon.stellarpay.io',
+  sp_horizon_server : 'https://horizon.stellar.org',
   // Stellar Foundation Horizon Server - Using for Broadcasting Operations
   sdf_horizon_server : 'https://horizon.stellar.org',
   // Testnet Server for Sandbox Operations
