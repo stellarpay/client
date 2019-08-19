@@ -30,7 +30,7 @@
 </div>
 </div>
 <span>Are you creating API for your Shopify store?</span>
-</br>
+</br></br>
 <div class="card-body">
     <div class="p-default p-round pretty" p-radio="">
         <input type="radio" id="yes" value="true" v-model="merchants.api.is_shopify">
@@ -47,32 +47,32 @@
 </div>
 <br>
 <span>Merchant Name *</span>
-<br>
+<br></br>
     <div class="modal-input donthide">
       <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.api.label" placeholder="Name of your shop">
     </div>
   <br>
   <span>Logo</span>
-  <br>
+  <br></br>
     <div class="modal-input donthide">
       <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.api.logo" placeholder="Merchant logo for payment gateway (URL)">
     </div>
     <br>
   <span v-if="merchants.api.is_shopify == 'true'">Shopify REST API (api_username:api_password@yourshop.myshopify.com) *</span>
   <span v-else>Notification Url *</span>
-  <br>
+  <br></br>
     <div class="modal-input donthide">
       <input class="css-et39ve e1opuodt6" id="section-input" v-model="merchants.api.ipn" placeholder="Payment notification URL">
     </div>
     <br>
   <span>Successful Transaction URL *</span>
-  <br>
+  <br></br>
     <div class="modal-input donthide">
       <input class="css-et39ve e1opuodt6" id="section-input" v-model="merchants.api.success" placeholder="Redirect URL after transaction succeed">
     </div>
     <br>
   <span>Cancel Transaction URL *</span>
-  <br>
+  <br></br>
     <div class="modal-input donthide">
       <input class="css-et39ve e1opuodt6" id="section-input" v-model="merchants.api.cancel" placeholder="Redirect URL after order cancelled">
     </div>
@@ -101,14 +101,14 @@
     <ul class="list-group" v-for="asset in merchants.assets" v-if="asset.asset_type != 'native'">
       <li class="list-group-item" style="padding:0px;border:0px;">
         <div class="left">
-        <i class="fa fa-plus" style="font-size:20px;color:green;margin-right:10px" v-if="asset.status == false" v-on:click="selectAsset(asset.asset_code)"></i>
-        <i class="fa fa-check" style="font-size:20px;color:green;margin-right:10px" v-if="asset.status != false" v-on:click="resetAsset(asset.asset_code)"></i>
         <div class="generated_icon">{{ merchants.shortAsset(asset.asset_code)}}</div>
         <span style="margin-left:10px;font-weight:600"> {{ asset.asset_code }}</span>
       </div>
         <div class="right">
-          <span class="status" style="margin-top:-35px">
-          <input id="search" type="text" class="form-control input-lg" v-model="asset.rate" placeholder="Asset/XLM Rate" style="width:200px;height:35px"/></span>
+          <span class="status" style="margin-top:-50px">
+          per XLM<input id="search" type="text" class="form-control input-lg" v-model="asset.rate" :placeholder="asset.asset_code+' / XLM Rate'" style="width:200px;height:35px;margin-right:30px"/></span>
+          <i class="fa fa-plus" style="font-size:20px;color:green;margin-top:-25px" v-if="asset.status == false" v-on:click="selectAsset(asset.asset_code)"></i>
+          <i class="fa fa-check" style="font-size:20px;color:green;margin-top:-25px" v-if="asset.status != false" v-on:click="resetAsset(asset.asset_code)"></i>
           </div>
       </li>
       <hr>

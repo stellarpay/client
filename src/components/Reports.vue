@@ -21,7 +21,8 @@
                               <td>
                                   <span v-if="item.shopifyId > 0">Payment received for {{ item.orderDescription }}</span>
                                   <span v-else>Payment received for {{ item.merchantLabel }}</span>
-                                  <span v-if="item.shopifyId > 0" class="label label-success"><b>${{ item.orderCurrency.rate.toFixed(2) }}</b> per XLM</span>
+                                  <span v-if="item.shopifyId > 0 && item.orderCurrency.currency != 'native'" class="label label-success"><b>${{ (item.orderCurrency.xlm_usd_rate *  item.orderCurrency.rate).toFixed(7) }}</b> per {{ item.orderCurrency.currency }}</span>
+                                  <span v-else-if="item.shopifyId > 0 && item.orderCurrency.currency == 'native'" class="label label-success"><b>${{ item.orderCurrency.xlm_usd_rate }}</b> per XLM</span>
                                   <span v-else class="label label-success"> Confirmed</span>
                                   <span class="label label-warning"><a :href="'https://stellarchain.io/tx/' + item.transactionId" target="_blank" style="text-decoration:none;color:white">View on-chain</a></span>
                               </td>

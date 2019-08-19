@@ -135,10 +135,10 @@
                     <div class="modal-input donthide">
                         <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.cancelUrl">
                     </div>
-                    <ul class="list-group" v-for="(rate, asset_name) in merchants.active_api.acceptedCurrencies" v-if="asset_name != 'native'">
                     </br>
-                      <span>Asset ratios</span>
-                    <br><br>
+                    <span>Asset ratios</span>
+                    <ul class="list-group" v-for="(rate, asset_name) in merchants.active_api.acceptedCurrencies" v-if="asset_name != 'native'">
+                    <br>
                       <li class="list-group-item" style="padding:0px;border:0px;">
                         <div class="left">
                         <div class="generated_icon">{{ merchants.shortAsset(asset_name)}}</div>
@@ -146,7 +146,7 @@
                       </div>
                         <div class="right">
                           <span class="status" style="margin-top:-50px">
-                          per XLM<input id="search" type="text" class="form-control input-lg" v-model="merchants.active_api.acceptedCurrencies[asset_name]" placeholder="Asset/XLM Rate" style="width:100px;height:35px"/></span>
+                          per XLM<input id="search" type="text" class="form-control input-lg" v-model="merchants.active_api.acceptedCurrencies[asset_name].rate" placeholder="Asset/XLM Rate" style="width:100px;height:35px"/></span>
                           </div>
                       </li>
                       <hr>

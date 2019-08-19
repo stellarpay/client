@@ -81,7 +81,7 @@
                   </div>
 
                   <div class="content-header">
-                      <button class="button-w">EXCHANGE</button><span class="current-price"><i class="fa fa-info-circle" style="font-size:21px"></i></span></div>
+                      <button class="button-w"><a target="_blank" href="https://stellarterm.com/account/" style="color:white;text-decoration:none">EXCHANGE</a></button><span class="current-price"><i class="fa fa-info-circle" style="font-size:21px"></i></span></div>
               </div>
               <!-- history -->
               <div class="history">
@@ -200,6 +200,9 @@ export default {
         return this.$root;
     }
   },
+  created() {
+    this.fetchTrustlines()
+  },
   mounted() {
     if(this.$root.account.logged == false){
       this.$router.push('login')
@@ -215,10 +218,10 @@ export default {
           $(this).addClass("active");
       });
         }, 1000);
-        window.setInterval(() => {
-        var current = this
-        current.fetchTrustlines()
-      }, 8000);
+      //   window.setInterval(() => {
+      //   var current = this
+      //   current.fetchTrustlines()
+      // }, 8000);
     })
     }
     /* eslint-disable */
@@ -302,6 +305,7 @@ export default {
               if(result.ledger > 0){
                 prefix.message = 'Asset successfuly added!'
                 setTimeout(function() {
+                    this.fetchTrustlines();
                     prefix.message = ''
                     prefix.error = ''
                     prefix.create_asset = []
