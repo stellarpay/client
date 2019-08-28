@@ -19,7 +19,7 @@
         <input id="section-input" type="text" v-model="backup.account.private" disabled>
       </div>
       <br>
-      <router-link to="/dashboard" style="text-decoration:none"><button class="button large primary inline">I took a backup and go dashboard</button></router-link>
+      <router-link to="/dashboard" style="text-decoration:none"><button class="button large primary inline">Go to dashboard</button></router-link>
       </section>
   </div>
 </template>

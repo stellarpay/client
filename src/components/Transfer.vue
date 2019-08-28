@@ -221,6 +221,8 @@ export default {
                       prefix.transfer.destinationStatus = ''
                       router.push('dashboard')
                   }, 5000);
+                } else {
+                  prefix.submitted = false
                 }
               });
           })

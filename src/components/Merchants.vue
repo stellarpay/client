@@ -3,12 +3,12 @@
     <div v-if="merchants.error" class="alert alert-danger alert-dismissable">
     <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     {{ merchants.error }}
-    </br>
+    <br>
     </div>
     <div v-if="merchants.message" class="alert alert-success alert-dismissable">
   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
     {{ merchants.message }}
-    </br>
+    <br>
   </div>
     <div class="content-title">API List</div>
     <div id="navbarDropdown" class="left-box">
@@ -59,8 +59,8 @@
                         <hr>
                         <h3 style="font-size:35px">&</h3>
                         <h1 style="font-size:55px;margin-top:25px">{{ merchants.stats.salesCount }}</h1>
-                        <h3>payments successfully</h3>
-                        <h5>completed</h5>
+                        <h3>Payments</h3>
+                        <h5>processed</h5>
                     </center>
                 </div>
             </div>
@@ -111,13 +111,13 @@
                     <div class="modal-input donthide">
                         <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.apiLabel">
                     </div>
-                    </br>
+                    <br>
                     <span>Logo URL</span>
                     <br>
                     <div class="modal-input donthide">
                         <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.apiImage">
                     </div>
-                    </br>
+                    <br>
                     <span>Notification URL</span>
                     <br>
                     <div class="modal-input donthide">
@@ -135,7 +135,7 @@
                     <div class="modal-input donthide">
                         <input class="css-et39ve e1opuodt6" id="section-input" type="text" v-model="merchants.active_api.cancelUrl">
                     </div>
-                    </br>
+                    <br>
                     <span>Asset ratios</span>
                     <ul class="list-group" v-for="(rate, asset_name) in merchants.active_api.acceptedCurrencies" v-if="asset_name != 'native'">
                     <br>

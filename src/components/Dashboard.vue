@@ -76,8 +76,7 @@
                           <span class="center-box-w-l-d-a" v-if="dashboard.balances['native'] > 0 && dashboard.active_currency.code == 'native'">${{ (dashboard.balances['native'] * dashboard.prices.USD_XLM).toFixed(2) }}</span>
                           <span class="center-box-w-l-d-a" v-if="dashboard.balances['native'] == null">$0.00</span>
 
-                          <div class="center-box-w-l-d-a-t" v-if="dashboard.active_currency.code != 'native'">Issuer : {{ dashboard.shortIt(dashboard.transfer.assets[dashboard.active_currency.code].asset_issuer,20) }}</div>
-                      </div>
+                          <div class="center-box-w-l-d-a-t" v-if="dashboard.active_currency.code != 'native'">Issuer of asset : <a target="_blank" :href="'https://stellarchain.io/address/'+dashboard.transfer.assets[dashboard.active_currency.code].asset_issuer">{{dashboard.shortIt(dashboard.transfer.assets[dashboard.active_currency.code].asset_issuer,20)}}</a></div>                      </div>
                   </div>
 
                   <div class="content-header">
@@ -92,9 +91,9 @@
                           <br>
                           <span class="no-transaction-text">There is no received payment for {{ dashboard.active_currency.code }}.</span>
                           <br>
-                          <span class="no-transaction-text" style="font-size:15px">*The history indicator filtering transactions for latest 200 and type <b>Payment</b> operations.</span>
+                          <span class="no-transaction-text" style="font-size:15px">*The history indicator filtering transactions for latest 200 operations.</span>
                           <br>
-                          <span class="no-transaction-text" style="font-size:14px">If you are looking for detailed history , switch <router-link to="/history" style="color:darkblue">[History]</router-link> page.</span>
+                          <span class="no-transaction-text" style="font-size:14px">If you are looking for detailed history , check your history on <a target="_blank" :href="'https://stellarchain.io/address/'+dashboard.account.public">Stellar explorer</a></span>
                       </div>
                   </div>
 
@@ -130,7 +129,7 @@
                           </tr>
                       </tbody>
                   </table>
-                  <a v-if="dashboard.last_actions.length > 5" href="#" class="view"><i class="fa fa-history" aria-hidden="true"></i> All History</a>
+                  <a v-if="(dashboard.last_actions).length > 5" href="#" class="view"><i class="fa fa-history" aria-hidden="true"></i> All History</a>
               </div>
           </div>
       </div>
@@ -305,7 +304,7 @@ export default {
               if(result.ledger > 0){
                 prefix.message = 'Asset successfuly added!'
                 setTimeout(function() {
-                    this.fetchTrustlines();
+                    met.fetchTrustlines();
                     prefix.message = ''
                     prefix.error = ''
                     prefix.create_asset = []
