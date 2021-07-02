@@ -15,7 +15,7 @@
     "moment": "^2.22.2",
     "segments": "^1.0.1",
     "sjcl": "^1.0.7",
-    "stellar-sdk": "^0.9.1",
+    "stellar-sdk": "^8.2.3",
     "style-loader": "^0.21.0",
     "vue": "^2.4.4",
     "vue-router": "^3.0.1",
